@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reserva de Computadoras</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <div>
+    <h1>Departamento de Informática - EPET 1</h1>
+    <p>Reserva de computadoras</p>
+  </div>
+  <button id="adminBtn" class="secondary" onclick="window.location.href='admin.html'">Administración</button>
+</header>
+
+<main>
+  <section class="card calendar-card">
+    <div class="calendar-head">
+      <button id="prevMonth">‹</button>
+      <h2 id="monthTitle"></h2>
+      <button id="nextMonth">›</button>
+    </div>
+    <div class="legend">
+      <span><i class="dot free"></i> Disponible</span>
+      <span><i class="dot partial"></i> Parcialmente reservado</span>
+      <span><i class="dot full"></i> Sin disponibilidad</span>
+      <span><i class="dot disabled"></i> No reservable (pasado / fin de semana)</span>
+    </div>
+    <div id="status" class="status"></div>
+    <div id="calendar" class="calendar"></div>
+  </section>
+
+  <aside class="card side-card">
+    <h2>Próximas reservas</h2>
+    <div id="upcoming"></div>
+    <hr>
+    <p class="hint"><strong>Capacidad:</strong> <span id="capacityLabel">cargando...</span> computadoras.</p>
+  </aside>
+</main>
+
+<div id="modal" class="modal hidden">
+  <div class="modal-box">
+    <button class="close" id="closeModal">×</button>
+    <h2 id="modalTitle">Nueva reserva</h2>
+    <form id="reservationForm">
+      <label>Profesor
+        <input id="teacher" required maxlength="80" placeholder="Ej.: María López">
+      </label>
+      <label>Curso / división
+        <input id="course" required maxlength="40" placeholder="Ej.: 3° B">
+      </label>
+      <div class="two">
+        <label>Desde
+          <input type="time" id="start" required>
+        </label>
+        <label>Hasta
+          <input type="time" id="end" required>
+        </label>
+      </div>
+      <label>Cantidad de computadoras
+        <input type="number" id="quantity" min="1" max="40" required value="1">
+      </label>
+      <label>Actividad / observaciones <span class="optional">(opcional)</span>
+        <textarea id="notes" maxlength="250" placeholder="Ej.: trabajo práctico de bases de datos"></textarea>
+      </label>
+      <div id="availability" class="availability"></div>
+      <button class="primary" type="submit">Confirmar reserva</button>
+    </form>
+  </div>
+</div>
+
+<div id="adminModal" class="modal hidden">
+  <div class="modal-box">
+    <button class="close" id="closeAdmin">×</button>
+    <h2>Administración</h2>
+    <p><strong>Capacidad actual:</strong> <span id="adminCapacity">—</span></p>
+    <button class="secondary" id="closeAdmin2">Cerrar</button>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
