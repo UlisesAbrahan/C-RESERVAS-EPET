@@ -1,5 +1,5 @@
 let reservations = [];
-let capacity = 30;
+let capacity = 45;
 let viewDate = new Date();
 viewDate.setDate(1);
 let selectedDate = "";
@@ -25,9 +25,10 @@ async function loadSettings() {
   const {data, error} = await supabaseClient.from("configuracion").select("clave,valor");
   if(error) throw error;
   const row = data?.find(x=>x.clave==="cantidad_pc");
-  capacity = Number(row?.valor || 30);
+  capacity = Number(row?.valor || 45);
   $("capacityLabel").textContent = capacity;
   $("adminCapacity").textContent = capacity;
+  $("quantity").max = capacity;
 }
 
 async function loadReservations() {
@@ -53,10 +54,21 @@ function maxUsed(k) {
   return max;
 }
 
+// Computadoras libres durante TODO el horario [start, end): se toma el momento
+// de mayor uso dentro de ese intervalo, no la suma de todas las reservas que lo rozan.
 function availability(date,start,end) {
-  return capacity - reservations
-    .filter(r=>r.fecha===date && mins(start)<mins(r.hora_fin) && mins(r.hora_inicio)<mins(end))
-    .reduce((s,r)=>s+Number(r.cantidad_pc),0);
+  const s=mins(start), e=mins(end);
+  const overlap=reservations.filter(r=>r.fecha===date && s<mins(r.hora_fin) && mins(r.hora_inicio)<e);
+  // El uso solo cambia cuando empieza una reserva, así que alcanza con revisar esos instantes.
+  const points=[s,...overlap.map(r=>mins(r.hora_inicio)).filter(p=>p>s&&p<e)];
+  let peak=0;
+  for(const p of points){
+    const used=overlap
+      .filter(r=>mins(r.hora_inicio)<=p && mins(r.hora_fin)>p)
+      .reduce((sum,r)=>sum+Number(r.cantidad_pc),0);
+    peak=Math.max(peak,used);
+  }
+  return capacity-peak;
 }
 
 function renderCalendar() {

@@ -9,7 +9,7 @@
 <body>
 <header>
   <div>
-    <h1>Departamento de Informática - EPET 1</h1>
+    <h1>Departamento de Informática</h1>
     <p>Reserva de computadoras</p>
   </div>
   <button id="adminBtn" class="secondary" onclick="window.location.href='admin.html'">Administración</button>
@@ -60,7 +60,7 @@
         </label>
       </div>
       <label>Cantidad de computadoras
-        <input type="number" id="quantity" min="1" max="40" required value="1">
+        <input type="number" id="quantity" min="1" required value="1">
       </label>
       <label>Actividad / observaciones <span class="optional">(opcional)</span>
         <textarea id="notes" maxlength="250" placeholder="Ej.: trabajo práctico de bases de datos"></textarea>
@@ -75,7 +75,9 @@
   <div class="modal-box">
     <button class="close" id="closeAdmin">×</button>
     <h2>Administración</h2>
+    <p class="hint">La gestión avanzada se realiza desde Supabase. Este acceso es informativo en esta versión pública.</p>
     <p><strong>Capacidad actual:</strong> <span id="adminCapacity">—</span></p>
+    <p class="hint">Para cambiar la cantidad de computadoras o eliminar una reserva, utilizá el Table Editor de Supabase.</p>
     <button class="secondary" id="closeAdmin2">Cerrar</button>
   </div>
 </div>

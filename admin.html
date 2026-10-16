@@ -15,7 +15,7 @@
 <body>
 <header>
   <div>
-    <h1>Departamento de Informática - EPET 1</h1>
+    <h1>Departamento de Informática</h1>
     <p>Administración de reservas</p>
   </div>
 </header>
@@ -47,6 +47,18 @@
         <button id="logoutBtn" class="logout">Cerrar sesión</button>
       </div>
     </div>
+
+    <section class="export-panel capacity-panel">
+      <h3>Computadoras disponibles</h3>
+      <p class="hint">Hoy hay <strong id="currentCapacity">—</strong> computadoras. Si se suman o se retiran equipos, actualizá el total acá y el calendario se ajusta solo.</p>
+      <div class="capacity-form">
+        <label>Total de computadoras
+          <input type="number" id="capacityInput" min="1" max="1000" step="1">
+        </label>
+        <button id="saveCapacityBtn" class="primary">Guardar cantidad</button>
+      </div>
+      <div id="capacityMessage" class="message"></div>
+    </section>
 
     <section id="exportPanel" class="export-panel" hidden>
       <h3>Descargar histórico en Excel</h3>

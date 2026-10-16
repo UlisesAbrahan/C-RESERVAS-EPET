@@ -49,7 +49,58 @@ function showPanel(session) {
   $("loginCard").hidden = true;
   $("panelCard").hidden = false;
   $("userInfo").textContent = session.user.email || "Administrador";
+  loadCapacity();
 }
+
+// ---------- Cantidad de computadoras ----------
+async function loadCapacity() {
+  clearMessage("capacityMessage");
+  const { data, error } = await supabaseClient
+    .from("configuracion")
+    .select("valor")
+    .eq("clave", "cantidad_pc")
+    .maybeSingle();
+
+  if (error) {
+    showMessage("capacityMessage", "No se pudo leer la cantidad de computadoras: " + error.message, "error");
+    return;
+  }
+  const n = Number(data?.valor || 0);
+  $("currentCapacity").textContent = n || "—";
+  $("capacityInput").value = n || "";
+}
+
+$("saveCapacityBtn").addEventListener("click", async () => {
+  clearMessage("capacityMessage");
+  const n = Number($("capacityInput").value);
+
+  if (!Number.isInteger(n) || n < 1 || n > 1000) {
+    showMessage("capacityMessage", "Ingresá un número entero entre 1 y 1000.", "error");
+    return;
+  }
+
+  const btn = $("saveCapacityBtn");
+  btn.disabled = true; btn.textContent = "Guardando...";
+
+  const { data, error } = await supabaseClient
+    .from("configuracion")
+    .update({ valor: String(n) })
+    .eq("clave", "cantidad_pc")
+    .select();
+
+  btn.disabled = false; btn.textContent = "Guardar cantidad";
+
+  if (error) {
+    showMessage("capacityMessage", "No se pudo guardar: " + error.message, "error");
+    return;
+  }
+  if (!data?.length) {
+    showMessage("capacityMessage", "No se guardó ningún cambio. Verificá que hayas ejecutado supabase.sql actualizado y que tu cuenta sea administradora.", "error");
+    return;
+  }
+  $("currentCapacity").textContent = n;
+  showMessage("capacityMessage", `Listo: ahora hay ${n} computadoras disponibles para reservar.`, "success");
+});
 
 async function loadReservations() {
   clearMessage("panelMessage");
